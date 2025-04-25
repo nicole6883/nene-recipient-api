@@ -22,10 +22,20 @@ app.get('/get-recipient-id', async (req, res) => {
       }
     );
 
-    const recipient_id = response.data.data.id;
+    console.log("Twitter API response:", response.data); // ← 追加したログ出力
+
+    const recipient_id = response.data?.data?.id;
+
+    if (!recipient_id) {
+      return res.status(404).json({ error: "User not found", detail: response.data });
+    }
+
     res.json({ recipient_id });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch recipient_id', detail: error.response?.data || error.message });
+    res.status(500).json({
+      error: "Failed to fetch recipient_id",
+      detail: error.response?.data || error.message,
+    });
   }
 });
 
